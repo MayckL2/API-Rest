@@ -1,17 +1,19 @@
 const express = require('express')
-const User = require('./src/models/User')
 const app = express()
 const userController = require('./src/controller/user.controller')
 const cors = require('cors')
 const {validId, validEmail} = require('./src/middlewares/global.middlewares') 
 const home = require('./src/controller/home.controller')
-
-require('dotenv').config()
-
-app.use(express.json())
-
 const connectDB = require('./src/database/connectMongo')
 
+// habilida dotenv
+require('dotenv').config()
+
+// habilida uso de json
+app.use(express.json())
+
+
+// conecta com banco de dados
 connectDB()
 
 // CORS
@@ -22,10 +24,10 @@ app.use((req, res, next) => {
     next()
 })
 
-
 // rota para pagina home
 app.get('/', home.Welcome)
 
+// rota para exibir todos os usuarios
 app.get('/user/', userController.findAll)
 
 // rota para achar um usuario pelo Id

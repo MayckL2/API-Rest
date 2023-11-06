@@ -1,4 +1,3 @@
-// const mongoose = require('mongoose')
 
 const Welcome = (req, res) => {
     res.status(200).send({

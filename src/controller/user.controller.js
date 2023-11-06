@@ -1,5 +1,4 @@
 const userService = require('../service/user.service')
-const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 
 // função de criação de personagem
