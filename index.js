@@ -1,12 +1,12 @@
 const express = require('express')
-const User = require('./models/User')
+const User = require('./src/models/User')
 const app = express()
 
 require('dotenv').config()
 
 app.use(express.json())
 
-const connectDB = require('./connectMongo')
+const connectDB = require('./src/database/connectMongo')
 
 connectDB()
 
