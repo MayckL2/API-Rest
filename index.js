@@ -1,6 +1,7 @@
 const express = require('express')
 const User = require('./src/models/User')
 const app = express()
+const userController = require('./src/controller/user.controller')
 
 require('dotenv').config()
 
@@ -12,10 +13,7 @@ connectDB()
 
 // const BookModel = require('./models/book.model')
 
-app.get('/api/', async (req, res) => {
-
-    res.send(await User.find())
-})
+app.get('/api/', userController.findAll)
 
 // app.get('/api/v1/books/:id', async (req, res) => {
 //     try {
