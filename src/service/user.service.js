@@ -18,5 +18,8 @@ const deleteUserService = (id)=> User.deleteOne({_id: id})
 // acha usuario atraves do email
 const findByEmail = (email) => User.findOne({email})
 
+// acha usuario pelo nome
+const findByName = (name) => User.findOne({name})
 
-module.exports = {createService, findAllServices, findByIdService, updateService, deleteUserService, findByEmail}
+
+module.exports = {createService, findAllServices, findByIdService, updateService, deleteUserService, findByEmail, findByName}

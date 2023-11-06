@@ -101,7 +101,7 @@ const login = async (req, res) => {
     // verifica se email do usuario existe
     const user = await userService.findByEmail(email).select("+password")
     if (!user) {
-        return res.status(401).send({
+        return res.status(404).send({
             msg: "Usuario ou senha invalidos..."
         })
     }
@@ -109,7 +109,7 @@ const login = async (req, res) => {
     // verifica se email coinside com a senha encriptada
     const passwordValid = await bcrypt.compare(password, user.password)
     if (!passwordValid) {
-        return res.status(401).send({
+        return res.status(404).send({
             msg: "Usuario ou senha invalidos..."
         })
     }
@@ -119,29 +119,21 @@ const login = async (req, res) => {
     })
 }
 
-module.exports = { create, findAll, findById, update, deleteUser, login }
+const findName = async (req, res) =>{
+    const {name} = req.body
 
+    const user = await userService.findByName(name)
 
-// const findByName = async (req, res) =>{
-//     const name = req.params.name
-//     const user = await userService.findByName(name)
-//     let retornoNome = []
+    if(user){
+        res.status(404).send({
+            msg: "usuario não encontrado..."
+        })
+    }else{
+        res.status(200).send({
+            user
+        })
+    }
+    
+}
 
-//     for (let i = 0; i < user.length; i++) {
-//         if(user[i].name.search(name) != -1){
-//             retornoNome.push(user[i])
-
-//         }
-//     }
-
-//     if(user.length == 0){
-//         return res.status(400).send({
-//             msg: 'Nenhum usuario com esse nome...'
-//         })
-//     }else{
-//         return res.status(200).send({
-//             status: 'sucesso',
-//             response: retornoNome
-//         })
-//     }
-// }
+module.exports = { create, findAll, findById, update, deleteUser, login, findName }

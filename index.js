@@ -45,6 +45,8 @@ app.delete('/delete/:id?', validId, userController.deleteUser)
 // rota de login
 app.post('/login/', userController.login)
 
+// rota para pesquisar usuario pelo nome
+app.post('/find/', userController.findName)
 
 const PORT = process.env.PORT || 3000
 
