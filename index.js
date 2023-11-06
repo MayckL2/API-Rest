@@ -4,6 +4,7 @@ const app = express()
 const userController = require('./src/controller/user.controller')
 const cors = require('cors')
 const {validId, validEmail} = require('./src/middlewares/global.middlewares') 
+const home = require('./src/controller/home.controller')
 
 require('dotenv').config()
 
@@ -20,6 +21,10 @@ app.use((req, res, next) => {
     app.use(cors())
     next()
 })
+
+
+// rota para pagina home
+app.get('/', home.Welcome)
 
 app.get('/user/', userController.findAll)
 
