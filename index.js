@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 app.get('/', home.Welcome)
 
 // rota para exibir todos os usuarios
-app.get('/user/', validToken, userController.findAll)
+app.get('/user/', userController.findAll)
 
 // rota para achar um usuario pelo Id
 app.get('/user/:id?', validToken, validId, userController.findById)
