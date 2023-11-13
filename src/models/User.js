@@ -20,6 +20,22 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    idade:{
+        type: Number,
+        required: true
+    },
+    pais:{
+        type: String,
+        required: true
+    },
+    salario:{
+        type: Number,
+        required: true
+    },
+    cargo:{
+        type: String,
+        required: true
+    },
     ativo:{
         type: Boolean,
         default: true

@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const userService = require('../service/user.service')
+const jwt = require("jsonwebtoken")
 
 // verifica de id passado pelos parametros é valido
- const validId = (req, res, next) => {
+const validId = (req, res, next) => {
     const { id } = req.params
 
     if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -13,12 +14,12 @@ const userService = require('../service/user.service')
 }
 
 // verifica se email ja existe no banco de dados na hora do cadastro
- const validEmail = async (req, res, next) =>{
-    const {email} = req.body
+const validEmail = async (req, res, next) => {
+    const { email } = req.body
 
     const user = await userService.findByEmail(email)
 
-    if(user != null){
+    if (user != null) {
         return res.send({
             msg: 'Email ja cadastrado...'
         })
@@ -27,4 +28,36 @@ const userService = require('../service/user.service')
     next()
 }
 
-module.exports = {validEmail, validId}
+// verifica se usuario possui toker
+const validToken = async (req, res, next) => {
+    const { authorization } = req.headers
+
+    // verifica se authorization esta no formato certo(Bearer Token)
+    const parts = authorization.split(" ")
+    if (parts.length != 2 || parts[0] != "Bearer") return res.status(401).send({ msg: "token mal formado..." })
+    
+    const token = parts[1]
+
+    if (token) {
+        // verifica se token é valido
+        jwt.verify(token, process.env.SECRET, async (error, decoded) => {
+            if (error) return res.status(401).send({msg: "token invalido..."})
+            // if (decoded) console.log(decoded)
+        
+            const user = await userService.findById(decoded.id)
+
+            if(!user || !user.id){
+                return res.status(401).send({msg: "usuario não encotrado..."})
+            }
+        })
+
+    } else {
+        res.status(401).send({
+            msg: "token nao foi gerado..."
+        })
+    }
+
+    next()
+}
+
+module.exports = { validEmail, validId, validToken }

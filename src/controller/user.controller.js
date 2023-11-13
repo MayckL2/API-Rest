@@ -3,22 +3,32 @@ const bcrypt = require('bcrypt')
 
 // função de criação de personagem
 const create = async (req, res) => {
-    const { name, email, password, avatar } = req.body
+    var { name, email, password, avatar, idade, pais, salario, cargo } = req.body
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !idade || !pais) {
         res.status(400).send({
-            msg: 'falha ao criar usuario...'
+            msg: 'falha ao cadastrar usuario...'
         })
     } else {
+        // se estes valore estiverem vazios, eles são zerados
+        if(!avatar) avatar = 'null'
+        if(!salario) salario = 0
+        if(!cargo) cargo == 'null'
+
         // passando os dados do body diretamente como paramentro
-        await userService.createService(name, email, password, avatar)
+        const data = {name, email, password, avatar, idade, pais, salario, cargo}
+        await userService.createService(data)
 
         res.status(201).send({
             msg: 'usuario criado com sucesso!',
             response: {
                 name,
                 email,
-                avatar
+                avatar,
+                idade,
+                pais,
+                salario,
+                cargo
             }
         })
     }
@@ -27,7 +37,25 @@ const create = async (req, res) => {
 
 // funçao para buscar todos os usuarios
 const findAll = async (req, res) => {
-    const users = await userService.findAllServices()
+    let {offset, limit} = req.query
+
+    if(!limit){
+        limit = 5
+    } else{
+        limit = Number(limit)
+    }
+    if(!offset) {
+        offset = 0
+    }else{
+        offset = Number(offset)
+    }
+
+    const users = await userService.findAll(offset, limit)
+    const total = await userService.count()
+    const currentUrl = req.baseUrl
+
+    const nextUrl = offset + limit < total ? `${currentUrl}?limit=${limit}&offset=${offset + limit}` : null
+    const previousUrl = offset - limit > 0 ? `${currentUrl}?limit=${limit}&offset=${offset - limit}` : null
 
     if (users.legth == 0) {
         return res.staus(400).send({
@@ -35,14 +63,21 @@ const findAll = async (req, res) => {
         })
     }
 
-    res.status(200).send(users)
+    res.status(200).send({
+        nextUrl,
+        previousUrl,
+        limit,
+        offset,
+        total,
+        users
+    })
 }
 
 // funçao para buscar usuario pelo Id
 const findById = async (req, res) => {
     const id = req.params.id
 
-    const user = await userService.findByIdService(id)
+    const user = await userService.findById(id)
 
     if (!user) {
         return res.staus(400).send({
@@ -57,20 +92,20 @@ const findById = async (req, res) => {
 // funçao para atualizar dados do usuario
 const update = async (req, res) => {
     const { id } = req.params
-    const { name, email, password, avatar } = req.body
+    const { name, email, password, avatar, idade, pais, salario, cargo } = req.body
 
-    const user = await userService.updateService(id, name, email, password, avatar)
+    const user = await userService.updateService(id, name, email, password, avatar, idade, pais, salario, cargo)
 
     if (user.acknowledged) {
         res.status(200).send({
             status: 'sucesso',
-            msg: `${name} modificado com sucesso!`,
+            msg: `Modificado com sucesso!`,
             update: user.acknowledged
         })
     } else {
         res.status(400).send({
             status: 'erro',
-            msg: `${name} não pode ser modificado!`,
+            msg: `Não pode ser modificado!`,
             update: user.acknowledged
         })
     }
@@ -124,7 +159,7 @@ const findName = async (req, res) =>{
 
     const user = await userService.findByName(name)
 
-    if(user){
+    if(user.length == 0){
         res.status(404).send({
             msg: "usuario não encontrado..."
         })
