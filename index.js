@@ -52,6 +52,12 @@ app.post('/find/', validToken, userController.findName)
 // rota pos login
 app.get('/poslogin/', validToken, userController.findAll)
 
+// rota para enviar email
+app.post('/sendEmail/', userController.sendEmail)
+
+// rota para trocar a senha do usuario
+app.put('/newPassword/', userController.changePassword)
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
