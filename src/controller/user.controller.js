@@ -8,8 +8,9 @@ const create = async (req, res) => {
 
     // verificando se os dados necessarios foram preenchidos
     if (!name || !email || !password || !idade || !pais) {
-        res.status(400).send({
-            msg: 'falha ao cadastrar usuario...'
+        return res.status(400).send({
+            msg: 'falha ao cadastrar usuario!',
+            details: 'Preencha {name, email, password, idade, pais} para cadastrar novos funcionarios...'
         })
     } else {
         // se estes valore estiverem vazios, eles são zerados
@@ -33,6 +34,8 @@ const create = async (req, res) => {
                 cargo
             }
         })
+        // MANDA EMAIL PARA O USUARIO QUE FOI CADASTRADO
+        sendEmailService(email, 'Cadastro feito com sucesso!', `Parabens ${name}! Voce esta cadastrado no nosso sistema de gerenciamento de funcionarios.`)
     }
 
 }
@@ -191,7 +194,7 @@ const findName = async (req, res) => {
 }
 
 // manda email para o usuario para troca de senha
-const sendEmail = async (req, res) => {
+const sendCode = async (req, res) => {
     const { email } = req.body
 
     // verifica se email do usuario esta cadastrado
@@ -210,7 +213,8 @@ const sendEmail = async (req, res) => {
     
     // envia o codigo para o email do usuario
     let code = random() + random() + random() + random() + random()
-    sendEmailService(email, code)
+    let text = `Aqui esta seu codigo de verificação: ${code}`
+    sendEmailService(email, 'Troca de senha!', text)
 
     res.status(201).send({
         msg: "Email enviado com sucesso!"
@@ -242,4 +246,4 @@ const changePassword = async (req, res) => {
     
 }
 
-module.exports = { create, findAll, findById, update, deleteUser, login, findName, sendEmail, changePassword }
+module.exports = { create, findAll, findById, update, deleteUser, login, findName, sendCode, changePassword }

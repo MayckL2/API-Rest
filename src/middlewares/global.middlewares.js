@@ -33,6 +33,11 @@ const validToken = async (req, res, next) => {
     const { authorization } = req.headers
 
     // verifica se authorization esta no formato certo(Bearer Token)
+    if(!authorization){
+        return res.status(401).send({
+            msg: "Nenhum token enviado..."
+        })
+    }
     const parts = authorization.split(" ")
     if (parts.length != 2 || parts[0] != "Bearer") return res.status(401).send({ msg: "token mal formado..." })
     

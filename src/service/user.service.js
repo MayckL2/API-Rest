@@ -1,7 +1,7 @@
 const User = require('../models/User')
 
 // cadatra novo usuario
-const createService = (data)=> User.create({data})
+const createService = (data)=> User.create(data)
 
 // mostra todos os usuarios cadastrados
 const findAll = (offset, limit)=> User.find().sort({_id: -1}).skip(offset).limit(limit)
