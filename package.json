@@ -1,7 +1,7 @@
 {
   "name": "mongodb",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for management of workers",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",

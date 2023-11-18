@@ -42,7 +42,6 @@ const validToken = async (req, res, next) => {
         // verifica se token é valido
         jwt.verify(token, process.env.SECRET, async (error, decoded) => {
             if (error) return res.status(401).send({msg: "token invalido..."})
-            // if (decoded) console.log(decoded)
         
             const user = await userService.findById(decoded.id)
 
