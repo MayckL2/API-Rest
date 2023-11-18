@@ -52,7 +52,7 @@ const validToken = async (req, res, next) => {
         })
 
     } else {
-        res.status(401).send({
+        return res.status(401).send({
             msg: "token nao foi gerado..."
         })
     }

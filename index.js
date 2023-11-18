@@ -43,7 +43,7 @@ app.put('/update/:id?', validToken, validId, validEmail, userController.update)
 // rota para deletar usuario
 app.delete('/delete/:id?', validToken, validId, userController.deleteUser)
 
-// rota de login
+// rota de login(gerar token)
 app.post('/login/', authController.login)
 
 // rota para pesquisar usuario pelo nome
