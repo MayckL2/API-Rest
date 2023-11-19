@@ -17,9 +17,10 @@ const create = async (req, res) => {
         if (!avatar) avatar = 'null'
         if (!salario) salario = 0
         if (!cargo) cargo == 'null'
+        let criacao = new Date().toLocaleDateString()
 
         // passando os dados do body diretamente como paramentro
-        const data = { name, email, password, avatar, idade, pais, salario, cargo }
+        const data = { name, email, password, avatar, idade, pais, salario, cargo, criacao }
         await userService.createService(data)
 
         res.status(201).send({
@@ -31,11 +32,12 @@ const create = async (req, res) => {
                 idade,
                 pais,
                 salario,
-                cargo
+                cargo,
+                criacao
             }
         })
         // MANDA EMAIL PARA O USUARIO QUE FOI CADASTRADO
-        sendEmailService(email, 'Cadastro feito com sucesso!', `Parabens ${name}! Voce esta cadastrado no nosso sistema de gerenciamento de funcionarios.`)
+        // sendEmailService(email, 'Cadastro feito com sucesso!', `Parabens ${name}! Voce esta cadastrado no nosso sistema de gerenciamento de funcionarios.`)
     }
 
 }

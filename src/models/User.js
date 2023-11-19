@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema({
     ativo:{
         type: Boolean,
         default: true
+    },
+    criacao:{
+        type: String,
+        required: true
     }
 })
 
